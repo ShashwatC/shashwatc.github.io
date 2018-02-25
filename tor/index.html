@@ -9,7 +9,7 @@
       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
       <link rel="stylesheet" href="style.css">
       <!-- add after bootstrap.min.css -->
-    <link rel="stylesheet" href="https://cdn.rawgit.com/afeld/bootstrap-toc/2f761d4/dist/bootstrap-toc.min.css">
+      <link rel="stylesheet" href="https://cdn.rawgit.com/afeld/bootstrap-toc/v0.4.1/dist/bootstrap-toc.min.css">
 
       <title>TOR realtime</title>
   </head>
@@ -26,7 +26,7 @@
           <h1>Real time over TOR</h1>
           <p> Setup details covering how to setup a private tor network, how to setup openvpn, and how to setup sip server and voip client(s). </p>
           <div class="alert alert-primary">
-            Configuration files are <a href="https://github.com/ShashwatC/real-time-over-tor" class="alert-link">available on github</a>.
+            Configuration files are <a href="https://github.com/ShashwatC/real-time-over" class="alert-link">available on github</a>.
           </div>
 
 
@@ -54,14 +54,18 @@
           </div>
 
           <h2> OpenVPN </h2>
-          <p> Once we have tor set up, we need to install openvpn on the machine which contains the tor client, as well as on the machine intended to be the vpn server. First we run the vpn on the server and start listening on some port. We then write an openvpn configuration specifying the server address and listening port, as well as the socks proxy port opened by tor locally. Once we run the openvpn client, we have a tunnel from the client to the server via our private tor network. </p>
+          <p> Once we have tor set up, we need to install openvpn on the machine which contains the tor client, as well as on the machine intended to be the vpn server. First we run the vpn on the server (<code>sudo /usr/sbin/openvpn --daemon ovpn-server --status /run/openvpn/server.status 10 --cd /etc/openvpn --script-security 2 --config /etc/openvpn/server.conf --writepid /run/openvpn/server.pid</code>) and start listening on some port. We then write an openvpn configuration specifying the server address and listening port, as well as the socks proxy port opened by tor locally. Once we run the openvpn client, we have a tunnel from the client to the server via our private tor network. </p>
+
 
           <div class="alert alert-warning">
             If you are having trouble with bandwidth, try looking at top output to see if CPU usage is hitting 100%. VPN compression + cryptography, as well as tor cryptography are very resource intensive and usually a single core can't push more than 700-800mbps irrespective of available bandwidth.
           </div>
 
           <h2> SIP server and voip client </h2>
-          <p> Finally, we need to setup a SIP server (in our case we use freeswitch) and configure a voip client to communicate with that SIP server. We are using pjsip for that. </p>
+          <p> Finally, we need to setup a SIP server (in our case we use freeswitch, and put it on the same machine as the openvpn server) and configure a voip client to communicate with that SIP server. We are using pjsip for that. The freeswitch configuration didn't need to be changed. However, we need to use a script called record-samples.py on the client, and give it appropriate paramters. The parameters can be identified by looking at the docker commond invocation done by runner.go. Since the runner.go script print the invoked docker command to stdout, there is no need to read the source.</p>
+          <div class="alert alert-info">
+            <strong> TODO: </strong> This configuration needs to be expaned. The SIP server should be made separate from the VPN server in the general case, and there should be a second client and full duplex voice calling.
+          </div>
         </div>
       </div>
     </div>
