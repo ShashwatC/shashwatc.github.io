@@ -1,1 +1,54 @@
-Hey 
+<!doctype html>
+<html lang="en">
+  <head>
+      <!-- Required meta tags -->
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+      <!-- Bootstrap CSS -->
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+      <title>TOR realtime</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="jumbotron">
+        <h1>Real time over TOR</h1>
+        <p> Setup details covering how to setup a private tor network, how to setup openvpn, and how to setup sip server and voip client(s). Configuration files are uploaded separately (TODO). </p>
+      </div>
+      <h2> Setting up private TOR</h2>
+      A complete private TOR network consists of the following-
+      <ul>
+        <li>Tor Directory Server</li>
+        <li>Tor Relays</li>
+        <li>Tor client</li>
+      </ul>
+
+      The setup is non-trivial when being done for the first time. Since there is already an elaborate tutorial for this setup by <a href="fengy.me/prog/2015/01/09/private-tor-network/">Fengy</a>, I will not spend time on the details. However, here's a quick overview of what all needs to be done to setup a private Tor network.
+      <ol>
+        <li> <strong>Install Tor</strong> - In our case, we will compile the source, instead of using some package manager.</li>
+        <li> <strong>Generate keys</strong> - We need to generate (various) keys for all the components of the network (directory server, relays and clients). </li>
+        <li> <strong>Create torrc files</strong> - We need to do this for all the components. The torrc will have some differences depending on what the function of that tor instance will be (i.e. ds, relay or client), but some structure would be shared.</li>
+        <li> <strong>Add fingerprints</strong> - We need to add directory server details and fingerprints  to all torrc's.</li>
+      </ol>
+
+      <h2> OpenVPN </h2>
+      <p> Once we have tor set up, we need to install openvpn on the machine which contains the tor client, as well as on the machine intended to be the vpn server. First we run the vpn on the server and start listening on some port. We then write an openvpn configuration specifying the server address and listening port, as well as the socks proxy port opened by tor locally. Once we run the openvpn client, we have a tunnel from the client to the server via our private tor network. </p>
+
+      <h2> SIP server and voip client </h2>
+      <p> Finally, we need to setup a SIP server (in our case we use freeswitch) and configure a voip client to communicate with that SIP server. We are using pjsip for that. </p>
+
+
+
+
+
+    </div>
+
+      <!-- Optional JavaScript -->
+      <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+      <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+  </body>
+</html>
