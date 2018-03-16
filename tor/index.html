@@ -26,7 +26,7 @@
           <h1>Real time over TOR</h1>
           <p> Setup details covering how to setup a private tor network, how to setup openvpn, and how to setup sip server and voip client(s). </p>
           <div class="alert alert-primary">
-            Configuration files are <a href="https://github.com/ShashwatC/real-time-over" class="alert-link">available on github</a>.
+            Configuration files are <a href="https://github.com/ShashwatC/real-time-over-tor" class="alert-link">available on github</a>.
           </div>
 
 
@@ -65,8 +65,21 @@
           <p> Finally, we need to setup a SIP server (in our case we use freeswitch, and put it on the same machine as the openvpn server) and configure a voip client to communicate with that SIP server. We are using pjsip for that. The freeswitch configuration didn't need to be changed. However, we need to use a script called record-samples.py on the client, and give it appropriate paramters. The parameters can be identified by looking at the docker commond invocation done by runner.go. Since the runner.go script print the invoked docker command to stdout, there is no need to read the source.</p>
           <div class="alert alert-info">
             <strong> TODO: </strong> This configuration needs to be expaned. The SIP server should be made separate from the VPN server in the general case, and there should be a second client and full duplex voice calling.
+          
           </div>
+          Here's how to compile pjsua python.
+            <pre>
+            <code>
+sudo apt-get install build-essential python-dev binutils make gcc
+tar -xf pjproject-2.7.2.tar.bz2 &amp;&amp; cd pjproject-2.7.2/
+export CFLAGS="$CFLAGS -fPIC"
+./configure &amp;&amp; make dep &amp;&amp; make
+cd pjsip-apps/src/python/
+sudo python setup.py install
+            </code>
+            </pre>
         </div>
+
       </div>
     </div>
 
