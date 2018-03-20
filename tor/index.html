@@ -73,6 +73,7 @@
 sudo apt-get install build-essential python-dev binutils make gcc
 tar -xf pjproject-2.7.2.tar.bz2 &amp;&amp; cd pjproject-2.7.2/
 export CFLAGS="$CFLAGS -fPIC"
+Edit pjsip/src/pjsua-lib/pjsua_media.c and increase RTP_RETRY to 10000
 ./configure &amp;&amp; make dep &amp;&amp; make
 cd pjsip-apps/src/python/
 sudo python setup.py install
