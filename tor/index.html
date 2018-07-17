@@ -46,6 +46,8 @@
             <li> <strong>Add fingerprints</strong> - We need to add directory server details and fingerprints  to all torrc's.</li>
           </ol>
 
+
+
           <div class="alert alert-info">
             Use <a href="https://nyx.torproject.org/#getting_started" class="alert-link">nyx (formerly arm)</a> to verify that your private tor is working well. It also has a torctl interpreter for fine tuning circuits, etc.
           </div>
@@ -62,15 +64,23 @@
           </div>
 
           <h2> SIP server and voip client </h2>
-          <p> Finally, we need to setup a SIP server (in our case we use freeswitch, and put it on the same machine as the openvpn server) and configure a voip client to communicate with that SIP server. We are using pjsip for that. The freeswitch configuration didn't need to be changed. However, we need to use a script called record-samples.py on the client, and give it appropriate paramters. The parameters can be identified by looking at the docker commond invocation done by runner.go. Since the runner.go script print the invoked docker command to stdout, there is no need to read the source.</p>
+          <p> Finally, we need to setup a SIP server (in our case we use freeswitch, and put it on the same machine as the openvpn server) and configure a voip client to communicate with that SIP server. We are using pjsip for that. The freeswitch configuration needed to be changed a bit. Also, we need to use a script called record-samples.py on the client, and give it appropriate paramters. The parameters can be identified by looking at the docker commond invocation done by runner.go. Since the runner.go script print the invoked docker command to stdout, there is no need to read the source.</p>
           <div class="alert alert-info">
             <strong> TODO: </strong> This configuration needs to be expaned. The SIP server should be made separate from the VPN server in the general case, and there should be a second client and full duplex voice calling.
           
           </div>
-          Here's how to compile pjsua python.
+          <h5>Freeswitch changes</h5>
+          <ul>
+              <li> freeswitch/conf/directory/default - We need to create around 1000-2000 extensions here. A simple script (extensionGen.py) is available for this.</li>
+              <li> freeswitch/conf/dialplan/default - Here we need to configure playback options. See 01_Ajit.xml in github. </li>
+
+
+          <h5>Compiling pjsua python</h5>
+        
+          Here are the steps to compile pjsua. Notice that we need to edit pjsua_media.c to avoid an issue which limits number of simultaneous calls to 100.
             <pre>
             <code>
-sudo apt-get install build-essential python-dev binutils make gcc
+sudo apt-get install build-essential python-dev binutils make gcc libasound2-dev
 tar -xf pjproject-2.7.2.tar.bz2 &amp;&amp; cd pjproject-2.7.2/
 export CFLAGS="$CFLAGS -fPIC"
 Edit pjsip/src/pjsua-lib/pjsua_media.c and increase RTP_RETRY to 10000
@@ -79,7 +89,27 @@ cd pjsip-apps/src/python/
 sudo python setup.py install
             </code>
             </pre>
+
+
+            Due to the RTP_RETRY edit, we will be able to go beyond 100 connnections. Now, after some point, we get errors saying too many open files. To fix that, go to this page <a href="https://stackoverflow.com/questions/26415833/docker-ignores-limits-conf-trying-to-solve-too-many-open-files-error">https://stackoverflow.com/questions/26415833/docker-ignores-limits-conf-trying-to-solve-too-many-open-files-error</a>. Instead of the '-', add 2 lines in limits file replacing - with soft
+            and hard respectively. Logout and log back in for ulimit changes. Instead of *, use root, since * wildcard doens't apply to root and we are running our script as root. 
         </div>
+
+Tor compile cheatsheet
+                    <pre>
+            <code>
+sudo apt-get update
+sudo apt-get -y install git automake libevent-dev libssl-dev
+cd ..
+git clone https://github.com/torproject/tor.git
+cd tor
+git checkout 727d3f1
+./autogen.sh
+./configure --disable-asciidoc
+make -j4
+            </code>
+            </pre>
+
 
       </div>
     </div>
