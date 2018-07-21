@@ -73,7 +73,7 @@
           <ul>
               <li> freeswitch/conf/directory/default - We need to create around 1000-2000 extensions here. A simple script (extensionGen.py) is available for this.</li>
               <li> freeswitch/conf/dialplan/default - Here we need to configure playback options. See 01_Ajit.xml in github. </li>
-
+                <li> freeswitch/conf/vars.xml -   X-PRE-PROCESS cmd="set" data="local_ip_v4=10.8.0.1" </li>
 
           <h5>Compiling pjsua python</h5>
         
@@ -94,22 +94,6 @@ sudo python setup.py install
             Due to the RTP_RETRY edit, we will be able to go beyond 100 connnections. Now, after some point, we get errors saying too many open files. To fix that, go to this page <a href="https://stackoverflow.com/questions/26415833/docker-ignores-limits-conf-trying-to-solve-too-many-open-files-error">https://stackoverflow.com/questions/26415833/docker-ignores-limits-conf-trying-to-solve-too-many-open-files-error</a>. Instead of the '-', add 2 lines in limits file replacing - with soft
             and hard respectively. Logout and log back in for ulimit changes. Instead of *, use root, since * wildcard doens't apply to root and we are running our script as root. 
         </div>
-
-Tor compile cheatsheet
-                    <pre>
-            <code>
-sudo apt-get update
-sudo apt-get -y install git automake libevent-dev libssl-dev
-cd ..
-git clone https://github.com/torproject/tor.git
-cd tor
-git checkout 727d3f1
-./autogen.sh
-./configure --disable-asciidoc
-make -j4
-            </code>
-            </pre>
-
 
       </div>
     </div>
